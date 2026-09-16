@@ -1,6 +1,0 @@
-{
-  "name": "Smart Complaint Management System (SCMS)",
-  "description": "Modern, professional complaint management platform for schools, colleges, and universities in Pakistan.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
