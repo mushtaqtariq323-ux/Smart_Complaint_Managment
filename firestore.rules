@@ -1,0 +1,75 @@
+rules_version = '2';
+
+// AI Fitness Coach — Firestore Security Rules (User Panel)
+// Every collection is keyed by the authenticated user's UID and can only be
+// accessed by that exact user. No public read/write anywhere.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    // Basic profile / account + onboarding flag + settings
+    match /users/{uid} {
+      allow read, write: if isOwner(uid);
+
+      // Extended fitness profile (age, goal, activity level, preferences...)
+      match /fitnessProfiles/{docId} {
+        allow read, write: if isOwner(uid);
+      }
+    }
+
+    // AI-generated workout plan + workout completion logs
+    match /workouts/{uid} {
+      allow read, write: if isOwner(uid);
+      match /logs/{logId} {
+        allow read, write: if isOwner(uid);
+      }
+    }
+
+    // AI-generated diet plan
+    match /dietPlans/{uid} {
+      allow read, write: if isOwner(uid);
+    }
+
+    // Progress entries (weight, nutrition, measurements) — one doc per day
+    match /progress/{uid} {
+      allow read, write: if isOwner(uid);
+      match /entries/{entryId} {
+        allow read, write: if isOwner(uid);
+      }
+    }
+
+    // User-built custom plans (self-made workout/diet routines with steps)
+    match /customPlans/{uid} {
+      allow read, write: if isOwner(uid);
+      match /plans/{planId} {
+        allow read, write: if isOwner(uid);
+      }
+    }
+
+    // AI Coach chat history — conversations + legacy flat messages.
+    // Every path is keyed by the authenticated user's UID.
+    match /chatHistory/{uid} {
+      allow read, write: if isOwner(uid);
+
+      match /messages/{messageId} {
+        allow read, write: if isOwner(uid);
+      }
+
+      // Multiple conversations (New Chat keeps old ones safely stored)
+      match /conversations/{conversationId} {
+        allow read, write: if isOwner(uid);
+        match /messages/{messageId} {
+          allow read, write: if isOwner(uid);
+        }
+      }
+    }
+
+    // Deny everything else
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

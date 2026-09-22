@@ -1,0 +1,27 @@
+# Netlify deployment — AI Fitness Coach (frontend + AI API in one site)
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[functions]
+  directory = "netlify/functions"
+  # nft traces files WITHOUT bundling — firebase-admin (CJS) stays intact
+  node_bundler = "nft"
+
+# ── AI API ──────────────────────────────────────────────────────────────
+# The browser still calls /api/chat — Netlify transparently routes it to the
+# serverless function that runs server/index.js (Express). GROQ_API_KEY lives
+# ONLY in Netlify environment variables, never in frontend code.
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+  force = true
+
+# ── SPA fallback ────────────────────────────────────────────────────────
+# Client-side routes (/login, /dashboard, /ai-coach, …) serve index.html.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

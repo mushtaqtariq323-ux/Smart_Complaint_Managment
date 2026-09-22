@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { -webkit-tap-highlight-color: transparent; }
+  body {
+    @apply bg-zinc-100 text-zinc-800 antialiased dark:bg-zinc-950 dark:text-zinc-200;
+    font-feature-settings: 'cv02', 'cv03', 'cv11';
+  }
+  ::selection { @apply bg-lime-300/60 text-zinc-900; }
+  ::-webkit-scrollbar { width: 9px; height: 9px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { @apply rounded-full bg-zinc-300 dark:bg-zinc-700; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-zinc-400 dark:bg-zinc-600; }
+}
+
+@layer components {
+  /* Ambient background glows */
+  .app-glow { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+  .app-glow::before {
+    content: ''; position: absolute; top: -180px; right: -120px; width: 560px; height: 560px; border-radius: 9999px;
+    background: radial-gradient(circle, rgba(163,230,53,.16), transparent 62%);
+  }
+  .app-glow::after {
+    content: ''; position: absolute; bottom: -220px; left: -140px; width: 620px; height: 620px; border-radius: 9999px;
+    background: radial-gradient(circle, rgba(16,185,129,.13), transparent 62%);
+  }
+  html:not(.dark) .app-glow::before { background: radial-gradient(circle, rgba(132,204,22,.14), transparent 62%); }
+  html:not(.dark) .app-glow::after { background: radial-gradient(circle, rgba(16,185,129,.10), transparent 62%); }
+
+  .card {
+    @apply rounded-2xl border border-zinc-200/90 bg-white shadow-card dark:border-white/[.07] dark:bg-zinc-900/70 dark:shadow-black/30;
+  }
+  .card-hover { @apply transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow-emerald hover:border-emerald-300/60 dark:hover:border-emerald-400/20; }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-lime-500 via-emerald-500 to-teal-500 bg-clip-text text-transparent dark:from-lime-300 dark:via-emerald-400 dark:to-teal-300;
+  }
+
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-xl text-sm font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/70 disabled:cursor-not-allowed disabled:opacity-60 active:scale-[.98]; }
+  .btn-primary { @apply btn bg-gradient-to-r from-lime-400 to-emerald-500 text-zinc-950 shadow-glow-lime hover:brightness-110; }
+  .btn-secondary { @apply btn bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-white/10 dark:text-white dark:hover:bg-white/[.16]; }
+  .btn-outline { @apply btn border border-zinc-300 bg-white/60 text-zinc-700 hover:border-emerald-400 hover:text-emerald-600 dark:border-white/15 dark:bg-white/[.03] dark:text-zinc-300 dark:hover:border-emerald-400/40 dark:hover:text-emerald-300; }
+  .btn-ghost { @apply btn text-zinc-500 hover:bg-zinc-200/70 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-white/[.06] dark:hover:text-white; }
+  .btn-danger { @apply btn bg-rose-500/10 text-rose-600 hover:bg-rose-500/20 dark:text-rose-400; }
+
+  .field {
+    @apply w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 shadow-sm outline-none transition-all
+      focus:border-emerald-400 focus:ring-4 focus:ring-emerald-400/15
+      dark:border-white/10 dark:bg-white/[.04] dark:text-white dark:placeholder-zinc-500 dark:focus:border-emerald-400/60;
+  }
+  .field-error { @apply border-rose-400 focus:border-rose-400 focus:ring-rose-400/15 dark:border-rose-500/60; }
+  .label { @apply mb-1.5 block text-[13px] font-semibold text-zinc-700 dark:text-zinc-300; }
+
+  .skeleton { @apply relative overflow-hidden rounded-lg bg-zinc-200/80 dark:bg-zinc-800/80; }
+  .skeleton::after {
+    content: ''; position: absolute; inset: 0; transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+    animation: shimmer 1.6s infinite;
+  }
+  html.dark .skeleton::after { background: linear-gradient(90deg, transparent, rgba(255,255,255,.07), transparent); }
+
+  .chip { @apply inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium; }
+}
+
+@layer utilities {
+  .scrollbar-thin::-webkit-scrollbar { width: 6px; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .text-balance { text-wrap: balance; }
+}
+
+/* Chat markdown-lite */
+.msg-text strong { @apply font-bold text-zinc-900 dark:text-white; }
